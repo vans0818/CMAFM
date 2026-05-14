@@ -1,0 +1,25 @@
+# Large dataset files
+RGBThermal.zip
+RGBThermal.z01
+RGBThermal.z02
+
+# Model checkpoint files (too large for GitHub)
+*.pth
+*.pt
+*.ckpt
+
+# Dataset images (too large for GitHub)
+RGBThermal/data/M3FD/Ir/
+RGBThermal/data/M3FD/Vis/
+RGBThermal/RGBThermal/
+
+# M3FD Annotation XMLs (dataset, not code)
+M3FD_Detection/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# HWP documents (binary)
+*.hwp
