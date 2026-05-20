@@ -96,13 +96,13 @@ def convert_m3fd():
 
             shutil.copy2(vis_path, rgb_out / f"{stem}.png")
             shutil.copy2(ir_path,  ir_out  / f"{stem}.png")
-            (lbl_out / f"{stem}.txt").write_text("\n".join(lines))
+            (lbl_out / f"{stem}.txt").write_text("\n".join(lines), encoding="utf-8")
 
-            txt_files[f"{split}_rgb"].append(str(rgb_out / f"{stem}.png"))
-            txt_files[f"{split}_ir"].append(str(ir_out   / f"{stem}.png"))
+            txt_files[f"{split}_rgb"].append(str(rgb_out / f"{stem}.png").replace("\\", "/"))
+            txt_files[f"{split}_ir"].append(str(ir_out   / f"{stem}.png").replace("\\", "/"))
 
     for key, lines in txt_files.items():
-        (OUT_M3FD / f"{key}.txt").write_text("\n".join(lines))
+        (OUT_M3FD / f"{key}.txt").write_text("\n".join(lines), encoding="utf-8")
         print(f"  {key}.txt: {len(lines)}개")
 
     return txt_files
@@ -168,10 +168,10 @@ def convert_flir():
 
             shutil.copy2(rgb_path, rgb_out / fname)
             shutil.copy2(ir_path,  ir_out  / fname)
-            (lbl_out / f"{stem}.txt").write_text("\n".join(lines))
+            (lbl_out / f"{stem}.txt").write_text("\n".join(lines), encoding="utf-8")
 
-            txt_files[f"{out_split}_rgb"].append(str(rgb_out / fname))
-            txt_files[f"{out_split}_ir"].append(str(ir_out   / fname))
+            txt_files[f"{out_split}_rgb"].append(str(rgb_out / fname).replace("\\", "/"))
+            txt_files[f"{out_split}_ir"].append(str(ir_out   / fname).replace("\\", "/"))
 
         print(f"  [{flir_split}] 완료: {len(txt_files[f'{out_split}_rgb'])}개, 건너뜀: {skipped}개")
 
@@ -190,7 +190,7 @@ def merge_and_write_yaml(m3fd_txt, flir_txt):
         merged = m3fd_txt.get(key, []) + flir_txt.get(key, [])
         random.shuffle(merged)
         out_path = merged_dir / f"{key}.txt"
-        out_path.write_text("\n".join(merged))
+        out_path.write_text("\n".join(merged), encoding="utf-8")
         print(f"  {key}.txt: M3FD {len(m3fd_txt.get(key,[]))} + FLIR {len(flir_txt.get(key,[]))} = {len(merged)}개")
 
     mp = merged_dir.as_posix()
@@ -206,7 +206,7 @@ nc: 6
 names: ['People', 'Car', 'Bus', 'Motorcycle', 'Lamp', 'Truck']
 """
     YAML_OUT.parent.mkdir(parents=True, exist_ok=True)
-    YAML_OUT.write_text(yaml_content)
+    YAML_OUT.write_text(yaml_content, encoding="utf-8")
     print(f"\nyaml 저장: {YAML_OUT}")
 
 
