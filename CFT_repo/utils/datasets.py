@@ -520,17 +520,20 @@ def img2label_paths(img_paths):
     sa, sb = os.sep + 'images' + os.sep, os.sep + 'labels' + os.sep  # /images/, /labels/ substrings
     result = []
     for x in img_paths:
-        # rgb/ or ir/ → labels/ 변환 (M3FD/FLIR 구조)
+        # rgb/images/ or ir/images/ → rgb/labels/ or ir/labels/ (M3FD/FLIR structure)
+        replaced = False
         for modal in ('rgb', 'ir'):
-            sep = os.sep + modal + os.sep
-            if sep in x:
-                x = x.replace(sep, os.sep + 'labels' + os.sep, 1)
+            for sep in (os.sep + modal + os.sep + 'images' + os.sep,
+                        '/' + modal + '/images/'):
+                if sep in x:
+                    x = x.replace(sep, (os.sep if os.sep in sep else '/') + modal +
+                                  (os.sep if os.sep in sep else '/') + 'labels' +
+                                  (os.sep if os.sep in sep else '/'), 1)
+                    replaced = True
+                    break
+            if replaced:
                 break
-            fwd = '/' + modal + '/'
-            if fwd in x:
-                x = x.replace(fwd, '/labels/', 1)
-                break
-        else:
+        if not replaced:
             x = x.replace(sa, sb, 1)
         result.append('txt'.join(x.rsplit(x.split('.')[-1], 1)))
     return result
